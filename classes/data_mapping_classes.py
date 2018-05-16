@@ -45,4 +45,4 @@ class InputFiles:
 class OutputFile:
     def __init__(self, file1):
         self.file_name = file1
-        self.open_mode = None
+        self.open_mode = 'w'

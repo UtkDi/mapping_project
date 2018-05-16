@@ -49,7 +49,7 @@ def read_brand_list_file(brand_list, mapping_dict):
 def load_brands_listing(csv_reader, master_brands_dictionary):
     for row in csv_reader:
         brand = master_brands_dictionary[row['screen_name']]
-        brand.followers_count = row['followers_count']
+        brand.followers_count = int(row['followers_count'])
 
 
 def read_post_table(post_table_file):
@@ -66,6 +66,8 @@ def load_posts(csv_reader):
                                      row['Handle'], row['Post Content'], int(row['Retweets']), int(row['Replies']), int(row['Likes']), row['Post Time'],
                                      row['Post Url'], row['Handle Image Url'])
         posts_lists.append(temp_post_object)
+        if temp_post_object.handle == 'Utkarsh':
+            print(temp_post_object)
 
     return posts_lists
 
@@ -85,6 +87,7 @@ def update_the_impression_count(brand):
     for hashtag in brand.hashtags_dict:
         for post in brand.posts_lists:
             if hashtag in post.hashtag:
+                print(brand.followers_count,type(brand.followers_count))
                 brand.hashtags_dict[hashtag] += (post.retweets + post.replies + post.likes + (brand.followers_count * 0.4))
     return
 
@@ -99,6 +102,7 @@ def write_data_to_file(out_file, brands_list):
         csvf = csv.writer(csv_file, delimiter=',', quotechar='"', quoting=csv.QUOTE_MINIMAL)
 
         for brand in brands_list:
+            print(brand, brand.hashtags_dict)
             for hashtag, value in brand.hashtags_dict.items():
                 csvf.writerow([brand.unique_key, None, 'brand', 'weibo', hashtag, value])
     return
